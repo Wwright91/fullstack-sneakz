@@ -30,6 +30,14 @@ sneakz.get("/:id", async (req, res) => {
 });
 
 sneakz.post("/", async (req, res) => {
+  if (!req.body.img) {
+    req.body.img =
+      "https://www.shutterstock.com/image-vector/no-image-available-vector-hand-260nw-745639717.jpg";
+  }
+  if (!req.body.price) {
+    req.body.price = 1;
+  }
+
   try {
     const sneaker = await createSneaker(req.body);
     res.json(sneaker);
@@ -50,6 +58,16 @@ sneakz.delete("/:id", async (req, res) => {
 
 sneakz.put("/:id", async (req, res) => {
   const { id } = req.params;
+
+  if (!req.body.img) {
+    req.body.img =
+      "https://www.shutterstock.com/image-vector/no-image-available-vector-hand-260nw-745639717.jpg";
+  }
+
+  if (!req.body.price) {
+    req.body.price = 1;
+  }
+
   const updatedSneaker = await updateSneaker(id, req.body);
   res.status(200).json(updatedSneaker);
 });

@@ -14,3 +14,5 @@ CREATE TABLE sneakers (
     img TEXT,
     review TEXT
 );
+
+--size
