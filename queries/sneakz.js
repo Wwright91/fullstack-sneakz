@@ -35,4 +35,35 @@ const createSneaker = async (sneaker) => {
   }
 };
 
-module.exports = { getAllSneakers, getOneSneaker, createSneaker };
+const deleteSneaker = async (id) => {
+  try {
+    const deletedSneaker = await db.one(
+      "DELETE FROM sneakers WHERE id = $1 RETURNING *",
+      id
+    );
+    return deletedSneaker;
+  } catch (error) {
+    return error;
+  }
+};
+
+const updateSneaker = async (id, sneaker) => {
+  const { price, seller_id, name, brand, color, used, img, review } = sneaker;
+  try {
+    const updatedSneaker = await db.one(
+      "UPDATE sneakers SET  price=$1, seller_id=$2, name=$3, brand=$4, color=$5, used=$6, img=$7, review =$8 WHERE id=$9 RETURNING *",
+      [price, seller_id, name, brand, color, used, img, review, id]
+    );
+    return updatedSneaker;
+  } catch (error) {
+    return error;
+  }
+};
+
+module.exports = {
+  getAllSneakers,
+  getOneSneaker,
+  createSneaker,
+  deleteSneaker,
+  updateSneaker,
+};
