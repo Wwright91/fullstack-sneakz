@@ -2,16 +2,12 @@ const pgp = require("pg-promise")();
 require("dotenv").config();
 
 const { DATABASE_URL, PG_HOST, PG_PORT, PG_DATABASE, PG_USER, PG_PASSWORD } =
-  process.env;
-// https://github.com/vitaly-t/pg-promise/wiki/Connection-Syntax#configuration-object
+    process.env;
+  
 const cn = DATABASE_URL
   ? {
       connectionString: DATABASE_URL,
       max: 30,
-      // this key value is only required for heroku deployment
-      //       ssl: {
-      //         rejectUnauthorized: false,
-      //       },
     }
   : {
       host: PG_HOST,

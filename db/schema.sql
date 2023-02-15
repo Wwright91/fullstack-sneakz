@@ -3,6 +3,8 @@ CREATE DATABASE sneakz_dev;
 
 \c sneakz_dev;
 
+DROP TABLE IF EXISTS sneakers;
+
 CREATE TABLE sneakers (
     id SERIAL PRIMARY KEY, 
     price NUMERIC,
@@ -13,6 +15,12 @@ CREATE TABLE sneakers (
     used BOOLEAN,
     img TEXT,
     review TEXT
+);
+
+DROP TABLE IF EXISTS cart;
+
+CREATE TABLE cart (
+    sneaker_id INT
 );
 
 --size

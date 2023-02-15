@@ -9,13 +9,82 @@ const {
   updateSneaker,
 } = require("../queries/sneakz");
 
+const {
+  addToCart, deleteCartItem
+} = require("../queries/cart");
+const db = require("../db/dbConfig");
+
 sneakz.get("/", async (req, res) => {
   const allSneakers = await getAllSneakers();
 
-  if (allSneakers[0]) {
-    res.status(200).json(allSneakers);
+  let sneakersCopy = [...allSneakers];
+
+  const { color, brand } = req.query;
+
+    if (color) {
+      console.log(color)
+    sneakersCopy = sneakersCopy.filter(
+      ({ color }) => color.toLowerCase() === req.query.color.toLowerCase()
+    );
+  }
+
+  if (brand) {
+    sneakersCopy = sneakersCopy.filter(
+      ({ brand }) => brand.toLowerCase() === req.query.brand.toLowerCase()
+    );
+  }
+
+  if (sneakersCopy[0]) {
+    res.status(200).json(sneakersCopy);
   } else {
     res.status(500).json({ error: "Server Error!" });
+  }
+});
+
+sneakz.post("/cart", async (req, res) => {
+  console.log(req.body)
+  try {
+      const item = await addToCart(req.body)
+      res.json(item)
+  } catch (error) {
+      res.status(400).json({error})
+  }
+})
+
+sneakz.get("/cart", async (req, res) => {
+  // const cart = await getCart()
+
+  try {
+    const allItems = await db.any("SELECT * FROM cart JOIN sneakers ON sneakers.id = cart.sneaker_id");
+    console.log("allItems", allItems)
+    res.json(allItems)
+  }
+
+  catch (error) {
+    res.status(400).json({error})
+}
+})
+
+sneakz.delete("/cart", async (req, res) => {
+
+  try {
+    const emptyCart = await db.any("TRUNCATE TABLE cart");
+    // console.log("allItems", emptyCart)
+    res.json(emptyCart)
+  }
+
+  catch (error) {
+    res.status(400).json({error})
+}
+});
+
+sneakz.delete("/cart/:sneaker_id", async (req, res) => {
+  const { sneaker_id } = req.params;
+  const deletedSneaker = await deleteCartItem(sneaker_id);
+  if (deletedSneaker) {
+    res.status(200).json(deletedSneaker.id);
+  } else {
+    res.status(404).json({ error: `No Sneaker With ID: ${sneaker_id} Found!` });
   }
 });
 
