@@ -13,6 +13,9 @@ app.get("/", (req, res) => {
 const sneakzController = require("./controllers/sneakzController.js");
 app.use("/sneakz", sneakzController);
 
+// const reviewsController = require("./controllers/reviewsController.js")
+// app.use("/reviews", reviewsController)
+
 app.get("*", (req, res) => {
     res.status(404).send("Page not found!")
 })

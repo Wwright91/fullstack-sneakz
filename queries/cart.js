@@ -1,14 +1,5 @@
 const db = require("../db/dbConfig.js");
 
-// const getCart = async () => {
-//   try {
-//     const cart = await db.any("SELECT * FROM cart");
-//     return cart;
-//   } catch (error) {
-//     return error;
-//   }
-// };
-
 const addToCart = async (cart) => {
   const { sneaker_id } = cart;
 
@@ -34,15 +25,6 @@ const deleteCartItem = async (sneaker_id) => {
     return error;
   }
 };
-
-// const emptyCart = async () => {
-//   try {
-//     // ("DELETE FROM cart");
-//       ("TRUNCATE TABLE cart");
-//   } catch (error) {
-//     return error;
-//   }
-// };
 
 module.exports = {
   addToCart,

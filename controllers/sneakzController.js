@@ -9,10 +9,11 @@ const {
   updateSneaker,
 } = require("../queries/sneakz");
 
-const {
-  addToCart, deleteCartItem
-} = require("../queries/cart");
+const { addToCart, deleteCartItem } = require("../queries/cart");
 const db = require("../db/dbConfig");
+
+const reviewsController = require("./reviewsController.js");
+sneakz.use("/:sneakerId/reviews", reviewsController);
 
 sneakz.get("/", async (req, res) => {
   const allSneakers = await getAllSneakers();
@@ -21,8 +22,8 @@ sneakz.get("/", async (req, res) => {
 
   const { color, brand } = req.query;
 
-    if (color) {
-      console.log(color)
+  if (color) {
+    console.log(color);
     sneakersCopy = sneakersCopy.filter(
       ({ color }) => color.toLowerCase() === req.query.color.toLowerCase()
     );
@@ -42,40 +43,34 @@ sneakz.get("/", async (req, res) => {
 });
 
 sneakz.post("/cart", async (req, res) => {
-  console.log(req.body)
+  console.log(req.body);
   try {
-      const item = await addToCart(req.body)
-      res.json(item)
+    const item = await addToCart(req.body);
+    res.json(item);
   } catch (error) {
-      res.status(400).json({error})
+    res.status(400).json({ error });
   }
-})
+});
 
 sneakz.get("/cart", async (req, res) => {
-  // const cart = await getCart()
-
   try {
-    const allItems = await db.any("SELECT * FROM cart JOIN sneakers ON sneakers.id = cart.sneaker_id");
-    console.log("allItems", allItems)
-    res.json(allItems)
+    const allItems = await db.any(
+      "SELECT * FROM cart JOIN sneakers ON sneakers.id = cart.sneaker_id"
+    );
+    console.log("allItems", allItems);
+    res.json(allItems);
+  } catch (error) {
+    res.status(400).json({ error });
   }
-
-  catch (error) {
-    res.status(400).json({error})
-}
-})
+});
 
 sneakz.delete("/cart", async (req, res) => {
-
   try {
     const emptyCart = await db.any("TRUNCATE TABLE cart");
-    // console.log("allItems", emptyCart)
-    res.json(emptyCart)
+    res.json(emptyCart);
+  } catch (error) {
+    res.status(400).json({ error });
   }
-
-  catch (error) {
-    res.status(400).json({error})
-}
 });
 
 sneakz.delete("/cart/:sneaker_id", async (req, res) => {

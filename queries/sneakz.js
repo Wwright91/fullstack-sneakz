@@ -22,8 +22,8 @@ const getOneSneaker = async (id) => {
 };
 
 const createSneaker = async (sneaker) => {
-    const { price, seller_id, name, brand, color, used, img, review } = sneaker;
-    
+  const { price, seller_id, name, brand, color, used, img, review } = sneaker;
+
   try {
     const newSneaker = await db.oneOrNone(
       "INSERT INTO sneakers (price, seller_id, name, brand, color, used, img, review) VALUES($1, $2, INITCAP($3), INITCAP($4), INITCAP($5), $6, $7, $8) RETURNING *",
