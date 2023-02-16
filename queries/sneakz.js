@@ -22,12 +22,12 @@ const getOneSneaker = async (id) => {
 };
 
 const createSneaker = async (sneaker) => {
-  const { price, seller_id, name, brand, color, used, img, review } = sneaker;
+  const { price, size, name, brand, color, used, img } = sneaker;
 
   try {
     const newSneaker = await db.oneOrNone(
-      "INSERT INTO sneakers (price, seller_id, name, brand, color, used, img, review) VALUES($1, $2, INITCAP($3), INITCAP($4), INITCAP($5), $6, $7, $8) RETURNING *",
-      [price, seller_id, name, brand, color, used, img, review]
+      "INSERT INTO sneakers (price, size, name, brand, color, used, img) VALUES($1, $2, INITCAP($3), INITCAP($4), INITCAP($5), $6, $7) RETURNING *",
+      [price, size, name, brand, color, used, img]
     );
     return newSneaker;
   } catch (error) {
@@ -48,11 +48,11 @@ const deleteSneaker = async (id) => {
 };
 
 const updateSneaker = async (id, sneaker) => {
-  const { price, seller_id, name, brand, color, used, img, review } = sneaker;
+  const { price, size, name, brand, color, used, img } = sneaker;
   try {
     const updatedSneaker = await db.one(
-      "UPDATE sneakers SET  price=$1, seller_id=$2, name=INITCAP($3), brand=INITCAP($4), color=INITCAP($5), used=$6, img=$7, review =$8 WHERE id=$9 RETURNING *",
-      [price, seller_id, name, brand, color, used, img, review, id]
+      "UPDATE sneakers SET  price=$1, size=$2, name=INITCAP($3), brand=INITCAP($4), color=INITCAP($5), used=$6, img=$7, WHERE id=$8 RETURNING *",
+      [price, size, name, brand, color, used, img, id]
     );
     return updatedSneaker;
   } catch (error) {
