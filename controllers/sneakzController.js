@@ -10,6 +10,14 @@ const {
 } = require("../queries/sneakz");
 
 const { addToCart, deleteCartItem } = require("../queries/cart");
+
+const {
+  checkName,
+  checkSize,
+  checkColor,
+  checkBoolean,
+} = require("../vallidations/checkSneaker");
+
 const db = require("../db/dbConfig");
 
 const reviewsController = require("./reviewsController.js");
@@ -43,7 +51,6 @@ sneakz.get("/", async (req, res) => {
 });
 
 sneakz.post("/cart", async (req, res) => {
-  console.log(req.body);
   try {
     const item = await addToCart(req.body);
     res.json(item);
@@ -93,22 +100,29 @@ sneakz.get("/:id", async (req, res) => {
   }
 });
 
-sneakz.post("/", async (req, res) => {
-  if (!req.body.img) {
-    req.body.img =
-      "https://www.shutterstock.com/image-vector/no-image-available-vector-hand-260nw-745639717.jpg";
-  }
-  if (!req.body.price) {
-    req.body.price = 1;
-  }
+sneakz.post(
+  "/",
+  checkName,
+  checkSize,
+  checkColor,
+  checkBoolean,
+  async (req, res) => {
+    if (!req.body.img) {
+      req.body.img =
+        "https://www.shutterstock.com/image-vector/no-image-available-vector-hand-260nw-745639717.jpg";
+    }
+    if (!req.body.price) {
+      req.body.price = 1;
+    }
 
-  try {
-    const sneaker = await createSneaker(req.body);
-    res.json(sneaker);
-  } catch (error) {
-    res.status(400).json({ error });
+    try {
+      const sneaker = await createSneaker(req.body);
+      res.json(sneaker);
+    } catch (error) {
+      res.status(400).json({ error });
+    }
   }
-});
+);
 
 sneakz.delete("/:id", async (req, res) => {
   const { id } = req.params;
@@ -120,20 +134,27 @@ sneakz.delete("/:id", async (req, res) => {
   }
 });
 
-sneakz.put("/:id", async (req, res) => {
-  const { id } = req.params;
+sneakz.put(
+  "/:id",
+  checkName,
+  checkSize,
+  checkColor,
+  checkBoolean,
+  async (req, res) => {
+    const { id } = req.params;
 
-  if (!req.body.img) {
-    req.body.img =
-      "https://www.shutterstock.com/image-vector/no-image-available-vector-hand-260nw-745639717.jpg";
+    if (!req.body.img) {
+      req.body.img =
+        "https://www.shutterstock.com/image-vector/no-image-available-vector-hand-260nw-745639717.jpg";
+    }
+
+    if (!req.body.price) {
+      req.body.price = 1;
+    }
+
+    const updatedSneaker = await updateSneaker(id, req.body);
+    res.status(200).json(updatedSneaker);
   }
-
-  if (!req.body.price) {
-    req.body.price = 1;
-  }
-
-  const updatedSneaker = await updateSneaker(id, req.body);
-  res.status(200).json(updatedSneaker);
-});
+);
 
 module.exports = sneakz;

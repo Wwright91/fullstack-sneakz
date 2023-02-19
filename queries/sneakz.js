@@ -51,7 +51,7 @@ const updateSneaker = async (id, sneaker) => {
   const { price, size, name, brand, color, used, img } = sneaker;
   try {
     const updatedSneaker = await db.one(
-      "UPDATE sneakers SET  price=$1, size=$2, name=INITCAP($3), brand=INITCAP($4), color=INITCAP($5), used=$6, img=$7, WHERE id=$8 RETURNING *",
+      "UPDATE sneakers SET price=$1, size=$2, name=INITCAP($3), brand=INITCAP($4), color=INITCAP($5), used=$6, img=$7 WHERE id=$8 RETURNING *",
       [price, size, name, brand, color, used, img, id]
     );
     return updatedSneaker;
